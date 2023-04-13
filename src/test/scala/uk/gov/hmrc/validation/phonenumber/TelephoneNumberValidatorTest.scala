@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.validation.nino
+package uk.gov.hmrc.validation.phonenumber
 
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
-import uk.gov.hmrc.validation.core.AttributeNormalizer._
+import uk.gov.hmrc.validation.core.AttributeValidator._
 
-class NinoNormalizerTest extends AnyFlatSpec with Matchers {
-  "NinoNormalizer" should "normalize a good nino" in {
-    val normalizedNino = for {
-      goodNino <- NinoValidator.validator.validate(Nino("Ab345678c"))
-      normGoodNino <- NinoNormalizer.normalizer.normalize(goodNino)
-    } yield normGoodNino
-    normalizedNino shouldBe Right(NormalizedAttribute(Nino("AB345678C")))
+class TelephoneNumberValidatorTest extends AnyFlatSpec with Matchers {
+  "NinoValidator" should "validate a good nino" in {
+    val validatedTelephoneNumber = for {
+      goodTelephoneNumber <- TelephoneNumberValidator.validator.validate(TelephoneNumber("004414941231234"))
+    } yield goodTelephoneNumber
+
+    validatedTelephoneNumber shouldBe Right(ValidAttribute(TelephoneNumber("004414941231234")))
   }
 }

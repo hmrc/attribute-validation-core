@@ -1,6 +1,17 @@
 /*
  * Copyright 2023 HM Revenue & Customs
  *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package uk.gov.hmrc.validation.nino
@@ -22,14 +33,14 @@ class NinoValidator extends AttributeValidator[Nino] {
     case i                                              => Some(i)
   }
 
-  override def validate(it: Nino): Either[InvalidAttribute[Nino], ValidAttribute[Nino]] = {
+  override def validate(it: Nino): AttributeValidator.ValidateResult[Nino] = {
     it.unwrap.trim match {
-      case ninoValidatorRegEx(n) => validationCheck(n).fold(
-        Left(InvalidAttribute(it)): Either[InvalidAttribute[Nino], ValidAttribute[Nino]])(x =>
-        Right(ValidAttribute[Nino](it))
+      case ninoValidatorRegEx(n) => validationCheck(n).toRight(InvalidAttribute).fold(
+        _ => Left(InvalidAttribute(it)),
+        _ => Right(ValidAttribute[Nino](it))
       )
       case x                     =>
-        Left[InvalidAttribute[Nino], ValidAttribute[Nino]](InvalidAttribute(it))
+        Left(InvalidAttribute(it))
     }
   }
 }
@@ -48,10 +59,10 @@ class NinoNormalizer extends AttributeNormalizer[Nino] {
   import AttributeNormalizer._
   import AttributeValidator._
 
-  override def normalize(it: ValidAttribute[Nino]): Either[NotNormalizedAttribute[Nino], NormalizedAttribute[Nino]] =
+  override def normalize(it: ValidAttribute[Nino]): AttributeNormalizer.NormalizeResult[Nino] =
     Try(it.valid.unwrap.toUpperCase).fold(
-      t => Left[NotNormalizedAttribute[Nino], NormalizedAttribute[Nino]](NotNormalizedAttribute(it.valid)),
-      n => Right[NotNormalizedAttribute[Nino], NormalizedAttribute[Nino]](NormalizedAttribute(Nino(n)))
+      t => Left(NotNormalizedAttribute(it.valid)),
+      n => Right(NormalizedAttribute(Nino(n)))
     )
 }
 
