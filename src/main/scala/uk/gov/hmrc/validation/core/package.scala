@@ -16,6 +16,8 @@
 
 package uk.gov.hmrc.validation
 
+import uk.gov.hmrc.validation.core.AttributeValidator.ValidAttribute
+
 package object core {
 
   trait AttributeValidator[T] {
@@ -28,6 +30,8 @@ package object core {
   object AttributeValidator {
 
     type ValidateResult[T] = Either[InvalidAttribute[T], ValidAttribute[T]]
+
+    def apply[T: AttributeValidator](t: T): ValidateResult[T] = implicitly[AttributeValidator[T]].validate(t)
 
     case class ValidAttribute[T](valid: T)
 
@@ -45,6 +49,8 @@ package object core {
   object AttributeNormalizer {
 
     type NormalizeResult[T] = Either[NotNormalizedAttribute[T], NormalizedAttribute[T]]
+
+    def apply[T: AttributeNormalizer](t: ValidAttribute[T]): NormalizeResult[T] = implicitly[AttributeNormalizer[T]].normalize(t)
 
     case class NormalizedAttribute[T](normalized: T)
 

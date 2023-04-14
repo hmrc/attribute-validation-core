@@ -19,12 +19,16 @@ package uk.gov.hmrc.validation.nino
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import uk.gov.hmrc.validation.core.AttributeNormalizer._
+import uk.gov.hmrc.validation.core.{AttributeNormalizer, AttributeValidator}
 
 class NinoNormalizerTest extends AnyFlatSpec with Matchers {
   "NinoNormalizer" should "normalize a good nino" in {
+    import NinoValidator.Implicits._
+    import NinoNormalizer.Implicits._
+
     val normalizedNino = for {
-      goodNino <- NinoValidator.validator.validate(Nino("Ab345678c"))
-      normGoodNino <- NinoNormalizer.normalizer.normalize(goodNino)
+      goodNino <- AttributeValidator(Nino("Ab345678c"))
+      normGoodNino <- AttributeNormalizer(goodNino)
     } yield normGoodNino
     normalizedNino shouldBe Right(NormalizedAttribute(Nino("AB345678C")))
   }

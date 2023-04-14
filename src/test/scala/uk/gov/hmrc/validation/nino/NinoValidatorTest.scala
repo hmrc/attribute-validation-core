@@ -19,6 +19,7 @@ package uk.gov.hmrc.validation.nino
 import org.scalatest.flatspec.AnyFlatSpec
 import org.scalatest.matchers.should.Matchers
 import uk.gov.hmrc.validation.core.AttributeNormalizer._
+import uk.gov.hmrc.validation.core.AttributeValidator
 import uk.gov.hmrc.validation.core.AttributeValidator._
 
 class NinoValidatorTest extends AnyFlatSpec with Matchers {
@@ -50,7 +51,8 @@ class NinoValidatorTest extends AnyFlatSpec with Matchers {
       "TN123456A",
       "ZZ123456A",
     )
-
-    badNinos.map(n => NinoValidator.validator.validate(Nino(n))).forall(_.isInstanceOf[InvalidAttribute[_]]) shouldBe false
+    import NinoValidator.Implicits._
+    badNinos.map(n => AttributeValidator(Nino(n))).forall(_.isInstanceOf[InvalidAttribute[_]]) shouldBe false
+    badNinos.map(n => AttributeValidator(Nino(n))).forall(_.isInstanceOf[InvalidAttribute[_]]) shouldBe false
   }
 }
