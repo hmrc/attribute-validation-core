@@ -1,21 +1,28 @@
-ThisBuild / version := "0.1.0-SNAPSHOT"
+import sbt.Keys._
+import sbt._
 
-ThisBuild / scalaVersion := "2.13.10"
+ThisBuild / name := "attribute-validation-core"
 
-ThisBuild / name := "nino-validation-core"
+ThisBuild / organization := "uk.gov.hmrc"
+
+val scala2_12 = "2.12.17"
+val scala2_13 = "2.13.10"
 
 lazy val `attribute-validation-core` = (project in file("."))
-  .settings(resolvers += Resolver.jcenterRepo)
+  .enablePlugins(BuildInfoPlugin)
   .settings(
-    scalaVersion := "2.13.10",
+    scalaVersion := scala2_13,
+    crossScalaVersions := Seq(scala2_12, scala2_13),
     majorVersion := 0,
+    isPublicArtefact := true,
+    publish / skip := true,
     libraryDependencies ++= Seq(
       "com.googlecode.libphonenumber" % "libphonenumber" % "8.13.9",
       "com.googlecode.libphonenumber" % "geocoder" % "2.201",
       "org.scalatest" %% "scalatest" % "3.2.15" % Test,
-      "org.scalactic" %% "scalactic" % "3.2.15" % Test,
-      "org.scalatestplus" %% "scalacheck-1-15" % "3.2.11.0" % Test,
       "com.vladsch.flexmark" % "flexmark-all" % "0.64.0" % Test
     ),
+    buildInfoKeys := Seq[BuildInfoKey](version),
+    buildInfoPackage := "uk.gov.hmrc.attribute_validation",
     Test / fork := true
   )
