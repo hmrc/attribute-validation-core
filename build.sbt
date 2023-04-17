@@ -22,7 +22,5 @@ lazy val `attribute-validation-core` = (project in file("."))
       "org.scalatest" %% "scalatest" % "3.2.15" % Test,
       "com.vladsch.flexmark" % "flexmark-all" % "0.64.0" % Test
     ),
-    buildInfoKeys := Seq[BuildInfoKey](version),
-    buildInfoPackage := "uk.gov.hmrc.attribute_validation",
     Test / fork := true
   )
