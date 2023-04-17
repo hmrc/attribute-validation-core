@@ -1,7 +1,12 @@
 
 # attribute-validation-core
 
-This is a placeholder README.md for a new repository
+A libraray to providate validation / normalization functionality for various attributes.
+
+Currently supported attributes:
++ nino
++ telephone number
+
 
 ### License
 
